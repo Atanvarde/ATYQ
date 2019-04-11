@@ -31,6 +31,7 @@ $(() => {
                     var snippetCheck = data.items[i].searchInfo;
                     var imgSrc, description;
 
+
                     if (imgCheck !== undefined) {
                         imgSrc = data.items[i].volumeInfo.imageLinks.thumbnail;
                     } else {
@@ -45,9 +46,11 @@ $(() => {
                         description = 'Unfortunately, there\'s no more information for you';
                     }
 
+                    var maxLength = 200;
+                    var trimmedDescription = description.substr(0,maxLength);
                     var bookCover = $("<img src=" + imgSrc + "/>");
                     var bookTitle = $("<li>" + (i + 1) + "." + " " + data.items[i].volumeInfo.title + "</li>");
-                    var bookDescription = $("<p>" + description + "</p>");
+                    var bookDescription = $("<p>" + trimmedDescription.substr(0, Math.min(trimmedDescription.length, trimmedDescription.lastIndexOf(" "))) + "..." + "</p>");
                     var bookListItem = $("<div>" + "</div>");
 
                     bookCover.addClass("bookcover_img");
