@@ -11,6 +11,16 @@ $(() => {
         loadBookList(searchQuery);
     });
 
+    const extractImage = (volumeInfo) => {
+        var src;
+        if (volumeInfo.imageLinks !== undefined) {
+            src = volumeInfo.imageLinks.thumbnail;
+        } else {
+            src = 'http://placehold.it/128x198';
+        }
+        return src;
+    }
+
     const loadBookList = (searchQuery) => {
         $.ajax({
             url: apiUrl,
@@ -26,30 +36,27 @@ $(() => {
 
                 for (var i = 0; i < data.items.length; i++) {
 
-                    var imgCheck = data.items[i].volumeInfo.imageLinks;
-                    var descCheck = data.items[i].volumeInfo.description;
+                    let volumeInfo = data.items[i].volumeInfo;
+
+                    var descCheck = volumeInfo.description;
                     var snippetCheck = data.items[i].searchInfo;
-                    var imgSrc, description;
+                    var description;
 
-
-                    if (imgCheck !== undefined) {
-                        imgSrc = data.items[i].volumeInfo.imageLinks.thumbnail;
-                    } else {
-                        imgSrc = 'http://placehold.it/128x198';
-                    }
+                    var imgSrc = extractImage(volumeInfo);
 
                     if (descCheck !== undefined) {
                         description = descCheck;
                     } else if (snippetCheck !== undefined) {
                         description = snippetCheck.textSnippet;
                     } else {
-                        description = 'Unfortunately, there\'s no more information for you';
+                        description = "Unfortunately, there's no more information for you";
                     }
 
                     var maxLength = 200;
                     var trimmedDescription = description.substr(0,maxLength);
+                    console.log(trimmedDescription);
                     var bookCover = $("<img src=" + imgSrc + "/>");
-                    var bookTitle = $("<li>" + (i + 1) + "." + " " + data.items[i].volumeInfo.title + "</li>");
+                    var bookTitle = $("<li>" + (i + 1) + "." + " " + volumeInfo.title + "</li>");
                     var bookDescription = $("<p>" + trimmedDescription.substr(0, Math.min(trimmedDescription.length, trimmedDescription.lastIndexOf(" "))) + "..." + "</p>");
                     var bookListItem = $("<div>" + "</div>");
 
