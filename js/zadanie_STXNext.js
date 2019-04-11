@@ -3,7 +3,6 @@ $(() => {
     const form = $(".form");
     const input = $(".form-search");
     const bookList = $(".book_list");
-    // const submit = form.find("button");
 
     form.on("submit", (event) => {
         event.preventDefault();
@@ -26,13 +25,21 @@ $(() => {
         if (volumeInfo.description !== undefined) {
             description = volumeInfo.description;
         } else if (searchInfo !== undefined) {
-            description = searchInfo.textSnippet;
+            description = searchInfo.textSnippet.replace("<br>","");
         } else {
             description = "Unfortunately, there's no more information for you";
         }
         return description;
     }
 
+    const trimDescription = (description) => {
+        const maxLength = 200;
+        if (description.length > maxLength) {
+            const trimmedDescription = description.substr(0, maxLength);
+            description = trimmedDescription.substr(0, trimmedDescription.lastIndexOf(" ")) + "...";
+        }
+        return description;
+    }
 
     const loadBookList = (searchQuery) => {
         $.ajax({
@@ -55,18 +62,17 @@ $(() => {
 
                     const imgSrc = extractImage(volumeInfo);
                     const description = extractDescription(volumeInfo,searchInfo);
+                    const shortDescription = trimDescription(description);
 
-                    const maxLength = 200;
-                    const trimmedDescription = description.substr(0,maxLength);
-                    console.log(trimmedDescription);
                     const bookCover = $("<img src=" + imgSrc + "/>");
                     const bookTitle = $("<li>" + (i + 1) + "." + " " + volumeInfo.title + "</li>");
-                    const bookDescription = $("<p>" + trimmedDescription.substr(0, Math.min(trimmedDescription.length, trimmedDescription.lastIndexOf(" "))) + "..." + "</p>");
+                    const bookDescription = $("<p>" + shortDescription + "</p>");
                     const bookListItem = $("<div>" + "</div>");
 
                     bookCover.addClass("bookcover_img");
                     bookListItem.addClass("bookListItem_ctn");
                     bookDescription.addClass("book_description");
+
                     bookList.append(bookListItem);
                     bookListItem.append(bookTitle);
                     bookListItem.append(bookCover);
