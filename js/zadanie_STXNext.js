@@ -12,7 +12,7 @@ $(() => {
     });
 
     const extractImage = (volumeInfo) => {
-        var src;
+        let src;
         if (volumeInfo.imageLinks !== undefined) {
             src = volumeInfo.imageLinks.thumbnail;
         } else {
@@ -20,6 +20,19 @@ $(() => {
         }
         return src;
     }
+
+    const extractDescription = (volumeInfo,searchInfo) => {
+        let description;
+        if (volumeInfo.description !== undefined) {
+            description = volumeInfo.description;
+        } else if (searchInfo !== undefined) {
+            description = searchInfo.textSnippet;
+        } else {
+            description = "Unfortunately, there's no more information for you";
+        }
+        return description;
+    }
+
 
     const loadBookList = (searchQuery) => {
         $.ajax({
@@ -34,31 +47,22 @@ $(() => {
                 console.log(data);
                 bookList.empty();
 
-                for (var i = 0; i < data.items.length; i++) {
+                for (let i = 0; i < data.items.length; i++) {
 
-                    let volumeInfo = data.items[i].volumeInfo;
+                    const item = data.items[i];
+                    const volumeInfo = item.volumeInfo;
+                    const searchInfo = item.searchInfo;
 
-                    var descCheck = volumeInfo.description;
-                    var snippetCheck = data.items[i].searchInfo;
-                    var description;
+                    const imgSrc = extractImage(volumeInfo);
+                    const description = extractDescription(volumeInfo,searchInfo);
 
-                    var imgSrc = extractImage(volumeInfo);
-
-                    if (descCheck !== undefined) {
-                        description = descCheck;
-                    } else if (snippetCheck !== undefined) {
-                        description = snippetCheck.textSnippet;
-                    } else {
-                        description = "Unfortunately, there's no more information for you";
-                    }
-
-                    var maxLength = 200;
-                    var trimmedDescription = description.substr(0,maxLength);
+                    const maxLength = 200;
+                    const trimmedDescription = description.substr(0,maxLength);
                     console.log(trimmedDescription);
-                    var bookCover = $("<img src=" + imgSrc + "/>");
-                    var bookTitle = $("<li>" + (i + 1) + "." + " " + volumeInfo.title + "</li>");
-                    var bookDescription = $("<p>" + trimmedDescription.substr(0, Math.min(trimmedDescription.length, trimmedDescription.lastIndexOf(" "))) + "..." + "</p>");
-                    var bookListItem = $("<div>" + "</div>");
+                    const bookCover = $("<img src=" + imgSrc + "/>");
+                    const bookTitle = $("<li>" + (i + 1) + "." + " " + volumeInfo.title + "</li>");
+                    const bookDescription = $("<p>" + trimmedDescription.substr(0, Math.min(trimmedDescription.length, trimmedDescription.lastIndexOf(" "))) + "..." + "</p>");
+                    const bookListItem = $("<div>" + "</div>");
 
                     bookCover.addClass("bookcover_img");
                     bookListItem.addClass("bookListItem_ctn");
