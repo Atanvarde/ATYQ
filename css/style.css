@@ -28,7 +28,6 @@ form {
     padding: 10px 40px;
     border-radius: 3px;
     cursor: pointer;
-    transition: 0.3s;
     font-size: 1.2rem;
 }
 
@@ -56,7 +55,7 @@ form {
 
 .bookListItem_ctn {
     background-color: floralwhite;
-    height:22rem;
+    height:23rem;
     margin-bottom: 2rem;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -69,5 +68,22 @@ form {
 
 .book_description {
     margin:1.5rem;
+}
+
+.icon_ctn {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.fas,.fa-search {
+    font-size: 5rem;
+    color: forestgreen;
+}
+
+.no_results_info {
+    color: grey;
+    font-size: 1.7rem;
+    margin-top: 10rem;
+    font-weight: bold;
 }
 
