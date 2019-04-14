@@ -3,7 +3,7 @@ var path = require("path");
 module.exports = {
     mode: "development",
     entry: {
-        main: path.resolve('./js/zadanie_STXNext.js')
+        main: path.resolve('./js/booksearch.js')
     },
 
     output: {
